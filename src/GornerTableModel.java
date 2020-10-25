@@ -3,10 +3,10 @@ import javax.swing.table.AbstractTableModel;
 @SuppressWarnings("serial")
 public class GornerTableModel extends AbstractTableModel
 {
-    private Double[] coefficients;
-    private Double from;
-    private Double to;
-    private Double step;
+    private final Double[] coefficients;
+    private final Double from;
+    private final Double to;
+    private final Double step;
 
     public GornerTableModel(Double from, Double to, Double step, Double[] coefficients)
     {
