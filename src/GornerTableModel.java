@@ -52,13 +52,19 @@ public class GornerTableModel extends AbstractTableModel
         {
             // Если запрашивается значение 1-го столбца, то это X
             return x;
-        } else
+        }
+        else
         {
             // Если запрашивается значение 2-го столбца, то это значение многочлена
-            Double result = 0.0;
             // Вычисление значения в точке по схеме Горнера.
             // Вспомнить 1-ый курс и реализовать
             // ...
+            Double result = coefficients[0];
+            for(int i = 1; i < coefficients.length; i++)
+            {
+                result *= x;
+                result += coefficients[i];
+            }
             return result;
         }
     }
