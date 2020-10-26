@@ -17,6 +17,10 @@ public class GornerTableCellRenderer implements TableCellRenderer
     // (иголкой). Применяется аналогия поиска иголки в стоге сена, в роли
     // стога сена - таблица
     private String needle = null;
+    private String rangeFrom = null;
+    private String rangeTo = null;
+    private Double rangeFromD = null;
+    private Double rangeToD = null;
     private final DecimalFormat formatter = (DecimalFormat) NumberFormat.getInstance();
 
     public GornerTableCellRenderer()
@@ -46,6 +50,24 @@ public class GornerTableCellRenderer implements TableCellRenderer
         String formattedDouble = formatter.format(value);
         // Установить текст надписи равным строковому представлению числа
         label.setText(formattedDouble);
+        if((col+row)%2==0)
+        {
+            panel.setBackground(Color.BLACK);
+            label.setForeground(Color.WHITE);
+        }
+        else
+        {
+            panel.setBackground(Color.WHITE);
+            label.setForeground(Color.BLACK);
+        }
+        if (rangeFromD == null && rangeFrom != null)
+        {
+            rangeFromD = Double.parseDouble(rangeFrom);
+        }
+        if (rangeToD == null && rangeTo != null)
+        {
+            rangeToD = Double.parseDouble(rangeTo);
+        }
         if (col == 1 && needle != null && needle.equals(formattedDouble))
         {
             // Номер столбца = 1 (т.е. второй столбец) + иголка не null
@@ -53,15 +75,29 @@ public class GornerTableCellRenderer implements TableCellRenderer
             // значение иголки совпадает со значением ячейки таблицы -
             // окрасить задний фон панели в красный цвет
             panel.setBackground(Color.RED);
-            //label.setForeground(Color.GREEN);
-        } else
+            label.setForeground(Color.WHITE);
+        }
+        if(col == 1 && rangeFromD!=null && rangeToD!= null)
         {
-            // Иначе - в обычный белый
-            panel.setBackground(Color.WHITE);
+            Double v = (Double) value;
+            if ( rangeFromD <= v && v <= rangeToD)
+            {
+                panel.setBackground(Color.GREEN);
+                label.setForeground(Color.RED);
+            }
         }
         return panel;
     }
-
+    public void setRangeFrom(String rangeFrom)
+    {
+        this.rangeFrom =  rangeFrom;
+        this.rangeFromD = null;
+    }
+    public void setRangeTo(String rangeTo)
+    {
+        this.rangeTo = rangeTo;
+        this.rangeToD = null;
+    }
     public void setNeedle(String needle)
     {
         this.needle = needle;
