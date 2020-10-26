@@ -53,6 +53,7 @@ public class GornerTableCellRenderer implements TableCellRenderer
             // значение иголки совпадает со значением ячейки таблицы -
             // окрасить задний фон панели в красный цвет
             panel.setBackground(Color.RED);
+            //label.setForeground(Color.GREEN);
         } else
         {
             // Иначе - в обычный белый

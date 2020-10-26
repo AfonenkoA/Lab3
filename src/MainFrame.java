@@ -1,6 +1,4 @@
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.DataOutputStream;
@@ -8,22 +6,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.JButton;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextField;
+import javax.imageio.ImageIO;
+import javax.swing.*;
 
 
 public class MainFrame extends JFrame
@@ -47,6 +31,7 @@ public class MainFrame extends JFrame
     private final JTextField textFieldTo;
     private final JTextField textFieldStep;
     private final Box hBoxResult;
+    private JPanel aboutPanel = null;
     // Визуализатор ячеек таблицы
     private final GornerTableCellRenderer renderer = new GornerTableCellRenderer();
     // Модель данных с результатами вычислений
@@ -74,6 +59,37 @@ public class MainFrame extends JFrame
         JMenu tableMenu = new JMenu("Таблица");
         // Добавить его в главное меню
         menuBar.add(tableMenu);
+        // создать меню справка
+        JMenu helpMenu = new JMenu("Справка");
+        menuBar.add(helpMenu);
+        Action showAuthorAction = new AbstractAction("О программе") {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+
+                if (aboutPanel==null)
+                {
+                    aboutPanel = new JPanel();
+                    Box box = Box.createVerticalBox();
+                    box.add(new JLabel("Автор : Афоненко Анатолий 7 группа"));
+                    String authorPicPath = "src/Author.jpg";
+                    JLabel authorImage = null;
+                    try
+                    {
+                        authorImage = new JLabel(new ImageIcon(ImageIO.read(new File(authorPicPath))));
+                    }
+                    catch (Exception ex)
+                    {
+                        ex.printStackTrace();
+                    }
+                    box.add(authorImage);
+                    aboutPanel.add(box);
+                }
+
+                JOptionPane.showMessageDialog(MainFrame.this,aboutPanel,"О программе",JOptionPane.INFORMATION_MESSAGE);
+            }
+        };
+        helpMenu.add(showAuthorAction);
         // Создать новое "действие" по сохранению в текстовый файл
         Action saveToTextAction = new AbstractAction("Сохранить в текстовый файл")
         {
