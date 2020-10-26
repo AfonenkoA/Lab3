@@ -117,6 +117,21 @@ public class MainFrame extends JFrame
         saveToTextMenuItem = fileMenu.add(saveToTextAction);
         // По умолчанию пункт меню является недоступным (данных ещѐ нет)
         saveToTextMenuItem.setEnabled(false);
+        Action saveToCSVAction = new AbstractAction("Сохранить в .csv файл") {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                if (fileChooser == null)
+                {
+                    fileChooser = new JFileChooser();
+                    fileChooser.setCurrentDirectory(new File("."));
+                }
+                if (fileChooser.showSaveDialog(MainFrame.this) == JFileChooser.APPROVE_OPTION)
+                    saveToCSVFile(fileChooser.getSelectedFile());
+            }
+        };
+        JMenuItem saveToCSVMenuItem = fileMenu.add(saveToCSVAction);
+        saveToCSVAction.setEnabled(false);
         // Создать новое "действие" по сохранению в текстовый файл
         Action saveToGraphicsAction = new AbstractAction("Сохранить данные для построения графика")
         {
@@ -286,6 +301,7 @@ public class MainFrame extends JFrame
                     // Пометить ряд элементов меню как доступных
                     saveToTextMenuItem.setEnabled(true);
                     saveToGraphicsMenuItem.setEnabled(true);
+                    saveToCSVAction.setEnabled(true);
                     searchValueMenuItem.setEnabled(true);
                     searchRangeMenuItem.setEnabled(true);
                 } catch (NumberFormatException ex)
@@ -318,6 +334,7 @@ public class MainFrame extends JFrame
                 // Пометить элементы меню как недоступные
                 saveToTextMenuItem.setEnabled(false);
                 saveToGraphicsMenuItem.setEnabled(false);
+                saveToCSVAction.setEnabled(false);
                 searchValueMenuItem.setEnabled(false);
                 searchRangeMenuItem.setEnabled(false);
                 // Обновить область содержания главного окна
@@ -369,7 +386,24 @@ public class MainFrame extends JFrame
         }
 
     }
-
+    protected void saveToCSVFile(File selectedFile)
+    {
+        try
+        {
+            PrintStream out = new PrintStream(selectedFile);
+            // Записать в поток вывода значения в точках
+            for (int i = 0; i < data.getRowCount(); i++)
+            {
+                out.println(data.getValueAt(i, 0) + "," +
+                                data.getValueAt(i, 1) + "," +
+                                data.getValueAt(i, 2) + "," +
+                                data.getValueAt(i, 3));
+            }
+            // Закрыть поток
+            out.close();
+        } catch (FileNotFoundException e)
+        {}
+    }
     protected void saveToTextFile(File selectedFile)
     {
         try
