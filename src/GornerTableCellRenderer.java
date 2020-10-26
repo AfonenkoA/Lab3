@@ -46,6 +46,16 @@ public class GornerTableCellRenderer implements TableCellRenderer
         String formattedDouble = formatter.format(value);
         // Установить текст надписи равным строковому представлению числа
         label.setText(formattedDouble);
+        if((col+row)%2==0)
+        {
+            panel.setBackground(Color.BLACK);
+            label.setForeground(Color.WHITE);
+        }
+        else
+        {
+            panel.setBackground(Color.WHITE);
+            label.setForeground(Color.BLACK);
+        }
         if (col == 1 && needle != null && needle.equals(formattedDouble))
         {
             // Номер столбца = 1 (т.е. второй столбец) + иголка не null
@@ -53,11 +63,8 @@ public class GornerTableCellRenderer implements TableCellRenderer
             // значение иголки совпадает со значением ячейки таблицы -
             // окрасить задний фон панели в красный цвет
             panel.setBackground(Color.RED);
-            //label.setForeground(Color.GREEN);
-        } else
-        {
-            // Иначе - в обычный белый
-            panel.setBackground(Color.WHITE);
+            label.setForeground(Color.WHITE);
+
         }
         return panel;
     }
