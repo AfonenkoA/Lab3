@@ -11,13 +11,13 @@ import javax.swing.table.TableCellRenderer;
 
 public class GornerTableCellRenderer implements TableCellRenderer
 {
-    private JPanel panel = new JPanel();
-    private JLabel label = new JLabel();
+    private final JPanel panel = new JPanel();
+    private final JLabel label = new JLabel();
     // Ищем ячейки, строковое представление которых совпадает с needle
     // (иголкой). Применяется аналогия поиска иголки в стоге сена, в роли
     // стога сена - таблица
     private String needle = null;
-    private DecimalFormat formatter = (DecimalFormat) NumberFormat.getInstance();
+    private final DecimalFormat formatter = (DecimalFormat) NumberFormat.getInstance();
 
     public GornerTableCellRenderer()
     {
