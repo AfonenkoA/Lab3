@@ -29,7 +29,7 @@ public class GornerTableModel extends AbstractTableModel
         this.coefficients = coefficients;
         List<Double> revcoef = Arrays.asList(coefficients.clone());
         Collections.reverse(revcoef);
-        this.revcoefficients = revcoef.toArray(new Double[revcoef.size()]);
+        this.revcoefficients = revcoef.toArray(new Double[0]);
     }
 
     public Double getFrom()
