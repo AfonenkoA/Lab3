@@ -30,8 +30,11 @@ public class MainFrame extends JFrame
     private final JTextField textFieldFrom;
     private final JTextField textFieldTo;
     private final JTextField textFieldStep;
+    private final JTextField textFieldSearchFrom;
+    private final JTextField textFieldSearchTo;
     private final Box hBoxResult;
-    private JPanel aboutPanel = null;
+    private JPanel aboutPanel;
+    private JPanel searchPanel;
     // Визуализатор ячеек таблицы
     private final GornerTableCellRenderer renderer = new GornerTableCellRenderer();
     // Модель данных с результатами вычислений
@@ -153,7 +156,40 @@ public class MainFrame extends JFrame
                 getContentPane().repaint();
             }
         };
-
+        textFieldSearchFrom = new JTextField(null,10);
+        textFieldSearchTo = new JTextField(null,10);
+        Action searchRangeAction = new AbstractAction("Найти диапазон значений") {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                if (searchPanel==null)
+                {
+                    searchPanel = new JPanel();
+                    Box box = Box.createVerticalBox();
+                    Box frombox = Box.createHorizontalBox();
+                    frombox.add(new JLabel("От "));
+                    frombox.add(textFieldSearchFrom);
+                    Box tobox = Box.createHorizontalBox();
+                    tobox.add(new JLabel("До "));
+                    tobox.add(textFieldSearchTo);
+                    box.add(frombox);
+                    box.add(tobox);
+                    searchPanel.add(box);
+                }
+                int code = JOptionPane.showConfirmDialog(MainFrame.this,searchPanel,"Поиск в диапазоне",JOptionPane.OK_CANCEL_OPTION);
+                if(code == JOptionPane.OK_OPTION)
+                {
+                    renderer.setRangeFrom(textFieldSearchFrom.getText());
+                    renderer.setRangeTo(textFieldSearchTo.getText());
+                }
+                textFieldSearchFrom.setText(null);
+                textFieldSearchTo.setText(null);
+                searchPanel.revalidate();
+                getContentPane().repaint();
+            }
+        };
+        JMenuItem searchRangeMenuItem = tableMenu.add(searchRangeAction);
+        searchRangeMenuItem.setEnabled(false);
         // Добавить действие в меню "Таблица"
         searchValueMenuItem = tableMenu.add(searchValueAction);
         // По умолчанию пункт меню является недоступным (данных ещѐ нет)
@@ -251,6 +287,7 @@ public class MainFrame extends JFrame
                     saveToTextMenuItem.setEnabled(true);
                     saveToGraphicsMenuItem.setEnabled(true);
                     searchValueMenuItem.setEnabled(true);
+                    searchRangeMenuItem.setEnabled(true);
                 } catch (NumberFormatException ex)
                 {
                     // В случае ошибки преобразования чисел показать сообщение об ошибке
@@ -259,9 +296,9 @@ public class MainFrame extends JFrame
                 }
             }
         });
-// Создать кнопку "Очистить поля"
+        // Создать кнопку "Очистить поля"
         JButton buttonReset = new JButton("Очистить поля");
-// Задать действие на нажатие "Очистить поля" и привязать к кнопке
+        // Задать действие на нажатие "Очистить поля" и привязать к кнопке
         buttonReset.addActionListener(new ActionListener()
         {
             public void actionPerformed(ActionEvent ev)
@@ -275,15 +312,19 @@ public class MainFrame extends JFrame
                 hBoxResult.removeAll();
                 // Добавить в контейнер пустую панель
                 hBoxResult.add(new JPanel());
+                renderer.setNeedle(null);
+                renderer.setRangeFrom(null);
+                renderer.setRangeTo(null);
                 // Пометить элементы меню как недоступные
                 saveToTextMenuItem.setEnabled(false);
                 saveToGraphicsMenuItem.setEnabled(false);
                 searchValueMenuItem.setEnabled(false);
+                searchRangeMenuItem.setEnabled(false);
                 // Обновить область содержания главного окна
                 getContentPane().validate();
             }
         });
-// Поместить созданные кнопки в контейнер
+        // Поместить созданные кнопки в контейнер
         Box hboxButtons = Box.createHorizontalBox();
         hboxButtons.setBorder(BorderFactory.createBevelBorder(1));
         hboxButtons.add(Box.createHorizontalGlue());
@@ -291,16 +332,16 @@ public class MainFrame extends JFrame
         hboxButtons.add(Box.createHorizontalStrut(30));
         hboxButtons.add(buttonReset);
         hboxButtons.add(Box.createHorizontalGlue());
-// Установить предпочтительный размер области равным удвоенному минимальному, чтобы при
-// компоновке окна область совсем не сдавили
+        // Установить предпочтительный размер области равным удвоенному минимальному, чтобы при
+        // компоновке окна область совсем не сдавили
         hboxButtons.setPreferredSize(new Dimension( ((Double) hboxButtons.getMaximumSize().getWidth()).intValue(),
                 ((Double) hboxButtons.getMinimumSize().getHeight()).intValue() * 2));
-// Разместить контейнер с кнопками в нижней (южной) области граничной компоновки
+        // Разместить контейнер с кнопками в нижней (южной) области граничной компоновки
         getContentPane().add(hboxButtons, BorderLayout.SOUTH);
-// Область для вывода результата пока что пустая
+        // Область для вывода результата пока что пустая
         hBoxResult = Box.createHorizontalBox();
         hBoxResult.add(new JPanel());
-// Установить контейнер hBoxResult в главной (центральной) области граничной компоновки
+        // Установить контейнер hBoxResult в главной (центральной) области граничной компоновки
         getContentPane().add(hBoxResult, BorderLayout.CENTER);
     }
 
